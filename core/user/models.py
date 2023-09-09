@@ -7,6 +7,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from django.db import models
 
+def user_directory_path(instance, filename):
+    return "user_{0}/{1}".format(instance.public_id, filename)
+
 class UserManager(BaseUserManager):
     def get_object_by_public_id(self, public_id):
         try:
@@ -47,15 +50,17 @@ class UserManager(BaseUserManager):
         return user
 
 class User(AbstractBaseUser,PermissionsMixin):
-    public_id = models.UUIDField(db_index=True, unique=True,
-                                 default=uuid.uuid4, editable=False)
-    username = models.CharField(db_index=True,
-                                max_length=255, unique=True)
+    username = models.CharField(db_index=True,max_length=255, unique=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
+
     email = models.EmailField(db_index=True, unique=True)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
+
+    bio = models.TextField(blank=True)
+    avator = models.ImageField(null=True, blank=True, upload_to=user_directory_path)
+
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now_add=True)
 
