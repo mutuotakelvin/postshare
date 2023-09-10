@@ -63,10 +63,29 @@ class User(AbstractModel,AbstractBaseUser,PermissionsMixin):
     bio = models.TextField(blank=True)
     avatar = models.ImageField(null=True, blank=True, upload_to=user_directory_path)
 
+    post_liked = models.ManyToManyField(
+        "core_post.Post",
+        related_name="liked_by"
+    )
+
     USERNAME_FIELD = "username"
     EMAIL_FIELD = "email"
 
     objects = UserManager()
+
+    def like(self, post):
+        """Like `post` if it hasn't been done yet"""
+        return self.post_liked.add(post)
+    
+    def remove_like(self, post):
+        """Remove like from `post`"""
+        return self.post_liked.remove(post)
+    
+    def has_liked(self, post):
+        """Return True if the user has likrd a `post`;
+            else False
+        """
+        return self.post_liked.filter(pk=post.pk).exists()
 
     def __str__(self):
         return f"{self.email}"
