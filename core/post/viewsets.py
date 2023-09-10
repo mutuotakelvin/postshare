@@ -8,7 +8,7 @@ from core.post.serializers import PostSerializer
 
 class PostViewSet(AbstractViewSet):
     hhtp_method_names = ('post','get')
-    permission_classes = (IsAuthenticated)
+    permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
 
     def get_queryset(self):

@@ -61,7 +61,7 @@ class User(AbstractModel,AbstractBaseUser,PermissionsMixin):
     is_superuser = models.BooleanField(default=False)
 
     bio = models.TextField(blank=True)
-    avator = models.ImageField(null=True, blank=True, upload_to=user_directory_path)
+    avatar = models.ImageField(null=True, blank=True, upload_to=user_directory_path)
 
     USERNAME_FIELD = "username"
     EMAIL_FIELD = "email"
