@@ -22,7 +22,7 @@ class RegisterSerializer(UserSerializer):
         model = User
         """List of all the fields that can be included in a 
         request or response"""
-        fields = ['id','bio','avator','email','username','first_name','last_name','password']
+        fields = ['id','bio','avatar','email','username','first_name','last_name','password']
 
     def create(self, validated_data):
         # Use the `create_user` methodwe wrote eailer for the UserManager to create a new user.

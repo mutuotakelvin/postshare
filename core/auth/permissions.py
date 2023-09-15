@@ -8,11 +8,27 @@ class UserPermission(BasePermission):
         if view.basename in ["post"]:
             return bool(request.user and request.user.is_authenticated)
         
-        return False
+        if view.basename in ["post-comment"]:
+            print(request.user)
+            print(obj.author)
+            if request.method in ["DELETE"]:
+                return bool(
+                    request.user.is_superuser
+                    or request.user in [obj.author, obj.post.author]
+                )
+
+            return bool(request.user and request.user.is_authenticated)
+        
+        if view.basename in ["user"]:
+            if request.method in SAFE_METHODS:
+                return True
+            return bool(request.user.id == obj.id)
+        
+        return True
     
     def has_permission(self, request, view):
-        if view.basename in ["post"]:
+        if view.basename in ["post","post-comment", "user"]:
             if request.user.is_anonymous:
                 return request.method in SAFE_METHODS
             return bool(request.user and request.user.is_authenticated)
-        return False
+        return True
